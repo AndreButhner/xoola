@@ -25,7 +25,10 @@ hoje = datetime.date.today()
 #       print(mov.add(mov))
 
 
+
 # Parcelas
 parcelas = Movimentacao.query.filter(Movimentacao.parcelas > 0).all()
 for registro in parcelas:
     print(registro.titulo)
+
+
