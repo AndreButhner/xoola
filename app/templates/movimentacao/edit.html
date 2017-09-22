@@ -1,0 +1,85 @@
+
+<!-- extend from base layout -->
+
+{% extends "layout/base.html" %}
+
+{% block content %}
+	<div class="form-horizontal">
+    <form action="" method="post" name="new">
+          {{form.hidden_tag() }}
+      <p>
+           {% for error in form.errors %}
+                   <span style="color: red;">[{{ error }}] </span>
+                {%  endfor%} <br>
+       </p>
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Data de Vencimento</label>
+					  <div class="controls">
+                     {{form.data_v }}
+					  </div>
+					</div>
+
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Lançamento</label>
+					  <div class="controls">
+                     {{ form.titulo }}
+					  </div>
+					</div>
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Descrição</label>
+					  <div class="controls">
+                     {{ form.descricao }}
+					  </div>
+              </div>
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Valor R$</label>
+					  <div class="controls">
+                     {{ form.valor }}
+					  </div>
+					</div>
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Forma de Pagamento</label>
+					  <div class="controls">
+                     {{ form.formapagamento_id }}
+					  </div>
+					</div>
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Conta</label>
+					  <div class="controls">
+                     {{ form.conta_id }}
+					  </div>
+					</div>
+
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Parcelas</label>
+					  <div class="controls">
+                     {{form.parcelas }}
+					  </div>
+					</div>
+
+               
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Categorias</label>
+					  <div class="controls">
+                     {{form.categoria_id }}
+					  </div>
+					</div>
+
+
+               <div class="form-actions">
+	  				<input type="submit" value="Salvar" class="btn btn-info">   
+              </div>
+
+      </form>
+</div>
+{% endblock %}
+
+
+
+

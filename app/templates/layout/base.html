@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+        <meta charset="utf-8" />
+        {% if title %}
+         <title> {{ title }} - COFRE </title>
+        {% else %}
+         <title> Cofree Admin </title>
+        {% endif %}
+
+
+
+        <meta name="description" content="User login page" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!--basic styles-->
+
+        <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/bootstrap-responsive.min.css') }}">
+        <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/xoola.css') }}">
+        <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+        <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/pagina.css') }}">
+        <link rel="stylesheet"                href="{{ url_for('static', filename='css/daterangepicker.css' )}}" />
+
+
+
+		<link rel="stylesheet" href="../static/css/jquery-ui-1.10.3.custom.min.css" />
+		<link rel="stylesheet" href="../static/css/chosen.css" />
+		<link rel="stylesheet" href="../static/css/datepicker.css" />
+		<link rel="stylesheet" href="../static/css/bootstrap-timepicker.css" />
+		<link rel="stylesheet" href="../static/css/daterangepicker.css" />
+		<link rel="stylesheet" href="../static/css/colorpicker.css" />
+		<link rel="stylesheet" href="assets/css/ace.min.css" />
+		<link rel="stylesheet" href="assets/css/ace-responsive.min.css" />
+		<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
+
+		<!--fonts-->
+
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
+
+		       
+
+        <!--ace styles-->
+
+        <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/ace.min.css') }}">
+        <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/ace-responsive.min.css') }}">
+        <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/ace-skins.min.css') }}">
+
+        <!--[if lte IE 8]>
+          <link rel="stylesheet" media="screen" href="{{ url_for('static', filename='css/ace-ie.min.css') }}">
+        <![endif]-->
+
+        <!--inline styles related to this page-->
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  </head>
+  <body>
+		<div class="navbar">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+					<a href="#" class="brand">
+						<small>
+							<i class="icon-leaf"></i>
+							XOOLO 
+						</small>
+					</a><!--/.brand-->
+
+					<ul class="nav ace-nav pull-right">
+						
+
+						<li class="purple">
+							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+								<i class="icon-bell-alt icon-animated-bell"></i>
+								<span class="badge badge-important">8</span>
+							</a>
+
+							
+						</li>
+
+						<li class="green">
+							<a data-toggle="dropdown" class="dropdown-toggle" href="#">
+								<i class="icon-envelope icon-animated-vertical"></i>
+								<span class="badge badge-success">5</span>
+							</a>
+
+							<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-closer">
+								<li class="nav-header">
+									<i class="icon-envelope-alt"></i>
+									5 Messages
+								</li>
+
+								<li>
+									<a href="#">
+										<img src="{{url_for('static', filename='avatars/avatar.png')}}" class="msg-photo" alt="Alex's Avatar" />
+										<span class="msg-body">
+											<span class="msg-title">
+												<span class="blue">Alex:</span>
+												Ciao sociis natoque penatibus et auctor ...
+											</span>
+
+											<span class="msg-time">
+												<i class="icon-time"></i>
+												<span>a moment ago</span>
+											</span>
+										</span>
+									</a>
+								</li>
+
+							
+
+
+								<li>
+									<a href="#">
+										See all messages
+										<i class="icon-arrow-right"></i>
+									</a>
+								</li>
+							</ul>
+						</li>
+
+						<li class="light-blue">
+							<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+								<img class="nav-user-photo" src="{{url_for('static', filename='avatars/user.jpg')}}" alt="Jason's Photo" />
+								<span class="user-info">
+									<small>Bem Vindo,</small>
+									{{usuario}}
+								</span>
+
+								<i class="icon-caret-down"></i>
+							</a>
+
+							<ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer">
+								<li>
+									<a href="#">
+										<i class="icon-cog"></i>
+										Settings
+									</a>
+								</li>
+
+								<li>
+									<a href="#">
+										<i class="icon-user"></i>
+										Profile
+									</a>
+								</li>
+
+								<li class="divider"></li>
+
+								<li>
+									<a href="{{url_for('auth.logout')}}">
+										<i class="icon-off"></i>
+										Logout
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul><!--/.ace-nav-->
+				</div><!--/.container-fluid-->
+			</div><!--/.navbar-inner-->
+		</div>
+
+		<div class="main-container container-fluid">
+			<a class="menu-toggler" id="menu-toggler" href="#">
+				<span class="menu-text"></span>
+			</a>
+
+			<div class="sidebar" id="sidebar">
+				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">						
+
+						<button class="btn btn-small btn-warning">
+							<i class="icon-group"></i>
+						</button>
+						<button class="btn btn-small btn-success ">
+							{{empresa }}
+						</button>
+					</div>
+
+					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+						<span class="btn btn-success"></span>
+
+						<span class="btn btn-info"></span>
+
+						<span class="btn btn-warning"></span>
+
+						<span class="btn btn-danger"></span>
+					</div>
+				</div><!--#sidebar-shortcuts-->
+
+				<ul class="nav nav-list">
+
+
+
+							
+					{% if session['tela'] == "dash" %}
+					<li class='active'>
+                    {% else %}
+                     <li>
+                     {% endif %}
+
+						<a href={{url_for('dashboard.index')}}>
+							<i class="icon-dashboard"></i>
+							<span class="menu-text"> Dashboard </span>
+						</a>
+					</li>
+
+
+
+
+		      {% if current_user.id == 1 %}			
+					{% if session['tela'] == "usuario" %}
+					<li class='active'>
+               {% else %}
+               <li>
+               {% endif %}      
+                
+						<a href="{{url_for('usuario.index')}}">
+							<i class="icon-list"></i>
+							<span class="menu-text"> Usuarios </span>
+						</a>
+					</li>
+
+
+
+              {% if session['tela'] == "empresa" %}
+					<li class='active'>
+               {% else %}
+               <li>
+               {% endif %}      
+
+						<a href="{{url_for('empresa.index')}}">
+							<i class="icon-list-alt"></i>
+							<span class="menu-text"> Empresa </span>
+						</a>
+					</li>
+             {% endif %}
+					
+
+
+                    {% if   session['tela'] == 'conta'         or 
+                            session['tela'] == 'entrada'       or
+                            session['tela'] == 'saida'         or
+                            session['tela'] == 'relatorio'     or
+                            session['tela'] == 'categoria'     or
+                            session['tela'] == 'pesquisa'      
+
+                    %}
+					<li class="active open">
+					{% else %}
+					<li>
+					{% endif %}	
+						<a href="#" class="dropdown-toggle">
+							<i class="icon-edit"></i>
+							<span class="menu-text"> Financeiro </span>
+
+							<b class="arrow icon-angle-down"></b>
+						</a>
+
+                        <ul class="submenu">
+						{% if session['tela'] == 'entrada' %}
+						<li class='active'>
+						{% else %}
+						<li>
+						{% endif %}	
+							<a href="{{url_for('movimentacao.index', mov_id=0)}}">
+								<i class="icon-double-angle-right"></i>
+								Recebimentos
+							</a>
+						</li>
+
+
+						{% if session['tela'] == 'saida' %}
+						<li class='active'>
+						{% else %}
+						<li>
+						{% endif %}	
+							<a href="{{url_for('movimentacao.index',mov_id=1)}}">
+								<i class="icon-double-angle-right"></i>
+								
+ 									
+ 									<span class="menu-text">
+								Pagamentos
+								
+							
+								      <span class="badge badge-warning">4</span>
+								      <span class="badge badge-warning">5</span>
+								    
+								
+							</span>
+							
+						</li>
+
+
+
+
+
+						{% if session['tela'] == 'planejamento' %}
+						<li class='active'>
+						{% else %}
+						<li>
+						{% endif %}
+						
+								<a href="{{url_for('planejamento.index')}}">
+									<i class="icon-double-angle-right"></i>
+									Planejamento
+								</a>
+							</li>
+
+
+
+
+						{% if session['tela'] == 'relatorio' %}
+						<li class='active'>
+						{% else %}
+						<li>
+						{% endif %}	
+
+							<a href="{{url_for('relatorio.index')}}">
+								<i class="icon-double-angle-right"></i>
+								Fluxo de Caixa
+							</a>
+						</li>
+
+
+
+						
+						{% if session['tela'] == 'conta' %}
+						<li class='active'>
+						{% else %}
+						<li>
+						{% endif %}	
+
+
+
+						<a href="{{url_for('conta.index')}}">
+							<i class="icon-double-angle-right"></i>
+							Contas
+						</a>
+						</li>
+
+
+
+
+						{% if session['tela'] == 'pesquisa' %}
+						<li class='active'>
+						{% else %}
+						<li>
+						{% endif %}	
+
+						<a href="{{url_for('movimentacao.pesquisa')}}">
+							<i class="icon-double-angle-right"></i>
+							Pesquisas
+						</a>
+						</li>
+
+
+
+						{% if session['tela'] == 'categoria' %}
+
+						<li class='active'>
+						{% else %}
+						<li>
+						{% endif %}	
+
+						<a href="{{url_for('categoria.index')}}">
+							<i class="icon-double-angle-right"></i>
+							Categorias
+						</a>
+						</li>
+
+
+
+
+						{% if session['tela'] == 'upload' %}
+
+						<li class='active'>
+						{% else %}
+						<li>
+						{% endif %}
+
+						<a href="{{url_for('upload.index')}}">
+									<i class="icon-double-angle-right"></i>
+									Upload Extrado
+								</a>
+							</li>
+
+
+						</ul>
+					</li>
+
+					
+				</ul><!--/.nav-list-->
+
+				<div class="sidebar-collapse" id="sidebar-collapse">
+					<i class="icon-double-angle-left"></i>
+				</div>
+			</div>
+
+			<div class="main-content">
+				<div class="breadcrumbs" id="breadcrumbs">
+					<ul class="breadcrumb">
+						<li>
+							<i class="icon-home home-icon"></i>
+							<a href="#">Home</a>
+
+							<span class="divider">
+								<i class="icon-angle-right arrow-icon"></i>
+							</span>
+						</li>
+						<li class="active">{{session['tela']}}</li>
+					</ul><!--.breadcrumb-->
+
+					
+				</div>
+
+				<div class="page-content">
+					<div class="page-header position-relative">
+						<h1>							
+							<small>
+								<i class="icon-double-angle-right"></i>
+								{{ title }}
+							</small>
+						</h1>
+					</div><!--/.page-header-->
+
+
+    {% block content %}
+
+
+
+    {% endblock %}
+ 
+
+	
+       <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+	
+     
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src={{ url_for('static', filename='js/jquery-2.0.3.mim.js') }}'>"+"<"+"/script>");
+		</script>
+
+	
+		<script type="text/javascript">
+			if("ontouchend" in document) document.write("<script src="{{ url_for('static', filename='js/jquery.mobile.custom.min.js') }}">"+"<"+"/script>");
+		</script>
+
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+		<!--page specific plugin scripts-->
+
+		<script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/jquery.dataTables.bootstrap.js') }}"></script>
+
+		<!--ace scripts-->
+
+		<script src="{{ url_for('static', filename='js/ace-elements.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/ace.min.js') }}"></script>
+
+
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='../static/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+		</script>
+
+		<script src="{{ url_for('static', filename='js/date-time/bootstrap-datepicker.min.js')}}"></script>
+		<script src="{{ url_for('static', filename='js/date-time/bootstrap-timepicker.min.js')}}"></script>
+		<script src="{{ url_for('static', filename='js/date-time/moment.min.js')}}"></script>
+		<script src="{{ url_for('static', filename='js/date-time/daterangepicker.min.js')}}"></script>
+
+		<script type="text/javascript">
+		     $(function() {		
+				$('.date-picker').datepicker().next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+				$('#id-date-range-picker-1').daterangepicker().prev().on(ace.click_event, function(){
+					$(this).next().focus();
+				});
+				
+			});				
+		</script>
+
+
+
+<script type="text/javascript">
+			$(function() {
+				var oTable1 = $('#sample-table-2').dataTable( {
+				"aoColumns": [
+			      { "bSortable": false },
+			      null, null,null, null, null,
+				  { "bSortable": false }
+				] } );
+				
+				
+				$('table th input:checkbox').on('click' , function(){
+					var that = this;
+					$(this).closest('table').find('tr > td:first-child input:checkbox')
+					.each(function(){
+						this.checked = that.checked;
+						$(this).closest('tr').toggleClass('selected');
+					});
+						
+				});
+			
+			
+				$('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+				function tooltip_placement(context, source) {
+					var $source = $(source);
+					var $parent = $source.closest('table')
+					var off1 = $parent.offset();
+					var w1 = $parent.width();
+			
+					var off2 = $source.offset();
+					var w2 = $source.width();
+			
+					if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
+					return 'left';
+				}
+ 
+			})
+                      $("#btn-modal").click(function()
+                          { 
+                            $('#myModal').modal(options);
+                         }) ;
+		</script>
+
+
+	</body>
+</html>
+

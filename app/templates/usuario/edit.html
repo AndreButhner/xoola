@@ -1,0 +1,83 @@
+
+<!-- extend from base layout -->
+
+{% extends "layout/base.html" %}
+
+{% block content %}
+  <div class="form-horizontal">
+    <form action="" method="post" name="edit">
+          {{form.hidden_tag() }}
+      <p>
+           {% for error in form.errors %}
+                   <span style="color: red;">[{{ error }}] </span>
+                {%  endfor%} <br>
+       </p>
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Nome</label>
+            <div class="controls">
+                     {{form.nome }}
+            </div>
+          </div>
+
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Sobrenome</label>
+            <div class="controls">
+                     {{ form.sobrenome }}
+            </div>
+          </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">E-mail</label>
+            <div class="controls">
+                     {{ form.email }}
+            </div>
+              </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Login</label>
+            <div class="controls">
+                     {{ form.login }}
+            </div>
+              </div>
+
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Password</label>
+            <div class="controls">
+                     {{ form.password }}
+            </div>
+          </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Confirmação Password</label>
+            <div class="controls">
+                     {{ form.confirm }}
+            </div>
+          </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Empresa</label>
+            <div class="controls">
+                     {{form.empresa_id }}
+            </div>
+          </div>
+
+               
+               
+
+               <div class="form-actions">
+            <input type="submit" value="Salvar" class="btn btn-info">   
+              </div>
+
+      </form>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+           

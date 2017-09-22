@@ -1,0 +1,131 @@
+
+<!-- extend from base layout -->
+
+{% extends "layout/base.html" %}
+
+{% block content %}
+	<div class="form-horizontal">    
+    <form action="" method="post" name="realizado" enctype="multipart/form-data" class="form-horizontal">	
+          {{form.hidden_tag() }}
+      <p>
+           {% for error in form.errors %}
+                   <span style="color: red;">[{{ error }}] </span>
+                {%  endfor%} <br>
+       </p>
+          <div class="row-fluid">
+            <div class="span6">   
+                 <div class="control-group">
+					   <label class="control-label" for="form-field-1">Valor R$</label>
+					  <div class="controls">
+                     {{ form.valor }}
+					  </div>
+					</div>
+						
+				<div class="control-group">
+					   <label class="control-label" for="form-field-1">Data Pagamento</label>
+					  <div class="controls">
+                       {{ form.data_pagamento}}
+					  </div>
+					</div>	
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Juros</label>
+					  <div class="controls">
+                       {{ form.juros}}
+					  </div>
+					</div>
+
+                    <div class="control-group">
+					   <label class="control-label" for="form-field-1">Multa</label>
+					  <div class="controls">
+                       {{ form.multa}}
+					  </div>
+					</div>
+
+                    <div class="control-group">
+					   <label class="control-label" for="form-field-1">Desconto</label>
+					  <div class="controls">
+                       {{ form.desconto}}
+					  </div>
+			  		</div>
+
+			  		<div class="control-group">
+					   <label class="control-label" for="form-field-1">Comprovante</label>
+					  <div class="controls">
+                     {{ form.comprovante }}
+					  </div>
+			</div>
+            </div>
+            <div class="span6">      
+
+
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Data de Vencimento</label>
+					  <div class="controls">
+                        {{ mov.data_v}}
+					  </div>
+					</div>
+
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Titulo</label>
+					  <div class="controls">
+                         {{ mov.titulo}}
+					  </div>
+					</div>
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Descrição</label>
+					  <div class="controls">
+                       {{ mov.descricao}}
+					  </div>
+              </div>
+
+               
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Forma de Pagamento</label>
+					  <div class="controls">
+                        {{ mov.formapagamento.tipo  }}
+					  </div>
+					</div>
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Conta</label>
+					  <div class="controls">
+                         {{ mov.conta.banco }}
+					  </div>
+					</div>
+
+
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Parcelas</label>
+					  <div class="controls">
+                        {{ mov.parcelas }}
+					  </div>
+					</div>
+
+               
+               <div class="control-group">
+					   <label class="control-label" for="form-field-1">Categorias</label>
+					  <div class="controls">
+                       {{ mov.categoria.titulo}}
+					  </div>
+					</div>
+				
+             </div> 
+            </div>
+
+               <div class="form-actions">
+	  				<input type="submit" value="Salvar" class="btn btn-info">   
+              </div>
+
+
+      </form>
+</div>
+{% endblock %}
+
+
+
+

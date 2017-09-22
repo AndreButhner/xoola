@@ -1,0 +1,54 @@
+<!-- extend from base layout -->
+
+{% extends "layout/base.html" %}
+
+{% block content %}
+  <div class="form-horizontal">
+    <form action="" method="post" name="new">
+          {{form.hidden_tag() }}
+      <p>
+           {% for error in form.errors %}
+                   <span style="color: red;">[{{ error }}] </span>
+                {%  endfor%} <br>
+       </p>
+
+                 <div class="control-group">
+             <label class="control-label" for="form-field-1">Nome</label>
+            <div class="controls">
+                     {{ form.nome(size=50) }}
+            </div>
+          </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Nome do Responsável</label>
+            <div class="controls">
+                     {{form.nome_resp }}
+            </div>
+          </div>
+
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">E-Mail</label>
+            <div class="controls">
+                     {{ form.email }}
+            </div>
+          </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Telegram (nickname)</label>
+            <div class="controls">
+                     {{ form.telegram }}
+            </div>
+              </div>
+
+               <div class="form-actions">
+            <input type="submit" value="Salvar" class="btn btn-info">   
+              </div>
+
+      </form>
+</div>
+{% endblock %}
+
+
+
+

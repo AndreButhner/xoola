@@ -1,0 +1,38 @@
+<!-- extend from base layout -->
+
+{% extends "layout/base.html" %}
+
+{% block content %}
+   <h1> Meus Planejamentos </h1>
+    <form action="" method="post" name="new">
+          {{form.hidden_tag() }}
+      <p>
+           {% for error in form.errors %}
+                   <span style="color: red;">[{{ error }}] </span>
+                {%  endfor%} <br>
+       </p>
+          <p> 
+              <p>
+                 <label>Titulo: </label> <br/>            
+                 {{ form.titulo(size=30) }} <br/>
+              </p>
+
+              <p>
+                 <label>Valor: </label> <br/>            
+                 {{ form.valor }} <br/>
+              </p>
+              
+              <p>
+                 <label>Descrição:</label> <br/>
+                 {{ form.descricao(size=30) }} <br/>
+              </p>
+
+              <div class="control-group">
+                    <label class="control-label" for="form-field-1">Categorias</label>
+              <div class="controls">
+                     {{form.categoria_id }}
+            </div>
+          </div>
+          <p><input type="submit" value="Salvar"></p>
+      </form>
+{% endblock %}

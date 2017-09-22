@@ -1,0 +1,23 @@
+from app import db
+from app.database import Categoria
+from app.database import Movimentacao
+from app.database import Docs
+import datetime
+
+cat = Categoria("Lazer", "Lazer com a familia", "credito")
+db.session.add(cat)
+db.session.commit()
+
+mov = Movimentacao("Luz","conta do mes",100, datetime.date(2015, 10, 12), 2, 1, False)
+mov.add(mov)
+
+
+doc = Docs('file1.pdf','c:zz','Comprovante')
+doc.add(doc)
+
+
+
+
+movimento = Movimentacao.query.get(1)
+
+doc = Docs.query.get(1)

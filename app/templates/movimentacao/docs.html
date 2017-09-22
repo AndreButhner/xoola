@@ -1,0 +1,151 @@
+<!-- extend from base layout -->
+
+{% extends "layout/base.html" %}
+
+
+{% block content %}
+
+    
+   <div class="space-12"></div>
+
+										<div class="profile-user-info profile-user-info-striped">
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Título </div>
+
+												<div class="profile-info-value">
+													<span>{{mov.titulo}}</span>
+												</div>
+											</div>
+
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Descrição </div>
+
+												<div class="profile-info-value">
+													<span>{{mov.descricao}}</span>
+												</div>
+											</div>
+
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Data de Vencimento </div>
+
+												<div class="profile-info-value">
+													<span>{{mov.data_v}}</span>
+												</div>
+											</div>
+
+											<div class="profile-info-row">
+												<div class="profile-info-name"> Categoria </div>
+
+												<div class="profile-info-value">
+													<span >{{mov.categoria.titulo}}</span>
+												</div>
+											</div>
+
+                     {% for file in mov.docs %} 
+  							<div class="profile-info-row"> 
+								<div class="profile-info-name"> {{file.tipo.title()}} </div>
+									<div class="profile-info-value">
+
+                           	<span>
+                                  <a  data-target="#{{file.id}}" data-toggle="modal" >{{file.filename}} </a> &nbsp; 
+                                  <a href="{{url_for('movimentacao.docs_delete', file_id=file.id)}}"><span class="icon-fixed-width icon-trash" aria-hidden="true"/></a>
+                           </span>
+												</div>
+                            </div>  
+                    
+                    <div id={{file.id}} class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                              <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                  <h4 class="modal-title" id="myModalLabel"><strong> {{file.tipo.title()}}:&nbsp; &nbsp;</strong>{{file.filename}}  </h4>
+                              </div>
+                         <div class="modal-body">
+                                 <div class="modal-content">
+                                   <object type="application/pdf" data="{{ url_for('static', filename=file.path.split('static')[1][1:])}}" width="900" height="900"> Documento n encontrado</object>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>                                   
+                  {% endfor %}
+
+											
+	</div>
+
+
+    
+
+    
+    
+    
+
+
+    <form action="" method="post" name="docs" enctype="multipart/form-data" class="form-horizontal">
+          {{form.hidden_tag() }}
+      <p>
+           {% for error in form.errors %}
+                   <span style="color: red;">[{{ error }}] </span>
+                {%  endfor%} <br>
+       </p>
+
+        <div class="control-group">
+					   <label class="control-label" for="form-field-1">Boleto</label>
+					  <div class="controls">
+                     {{ form.boleto }}
+					  </div>
+			</div>
+        <div class="control-group">
+					   <label class="control-label" for="form-field-1">Comprovante</label>
+					  <div class="controls">
+                     {{ form.comprovante }}
+					  </div>
+			</div>
+        <div class="control-group">
+					   <label class="control-label" for="form-field-1">Outros</label>
+					  <div class="controls">
+                     {{ form.outros }}
+					  </div>
+			</div>
+
+               <div class="form-actions">
+	  				<input type="submit" value="Salvar" class="btn btn-info">   
+              </div>
+
+      </form>
+
+<div class="space-12"></div>
+
+					<div class="profile-user-info profile-user-info-striped">
+											
+                     {% for file in mov.docs %} 
+  							<div class="profile-info-row"> 
+								<div class="profile-info-name"> {{file.tipo.title()}} ({{ file.data_v }}) </div>
+									<div class="profile-info-value">
+
+                           	<span>
+                                  <a  data-target="#{{file.id}}" data-toggle="modal" >{{file.filename}} </a> &nbsp; 
+                                  <a href="{{url_for('movimentacao.docs_delete', file_id=file.id)}}"><span class="icon-fixed-width icon-trash" aria-hidden="true"/></a>
+                           </span>
+												</div>
+                            </div>  
+                    
+                    <div id={{file.id}} class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                              <div class="modal-header">
+                                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                  <h4 class="modal-title" id="myModalLabel"><strong> {{file.tipo.title()}}:&nbsp; &nbsp;</strong>{{file.filename}}  </h4>
+                              </div>
+                         <div class="modal-body">
+                                 <div class="modal-content">
+                                   <object type="application/pdf" data="{{ url_for('static', filename=file.path.split('static')[1][1:])}}" width="900" height="900"> Documento n encontrado</object>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>                                   
+                  {% endfor %}
+
+											
+	</div>
+
+      
+{% endblock %}
+

@@ -1,0 +1,11 @@
+<!-- extend from base layout -->
+
+{% extends "layout/base.html" %}
+
+{% block content %}
+   <h1> Dados do csv <h1>
+
+   {% for linha in  dados %}
+       <p> {{ linha[1]}} - {{ linha[4]}} - {{ linha[5]}} </p>
+   {% endfor %} 
+{% endblock %}

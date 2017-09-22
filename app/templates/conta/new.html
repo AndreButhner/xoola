@@ -1,0 +1,72 @@
+
+<!-- extend from base layout -->
+
+{% extends "layout/base.html" %}
+
+{% block content %}
+  <div class="form-horizontal">
+    <form action="" method="post" name="new">
+          {{form.hidden_tag() }}
+      <p>
+           {% for error in form.errors %}
+                   <span style="color: red;">[{{ error }}] </span>
+                {%  endfor%} <br>
+       </p>
+
+                 <div class="control-group">
+             <label class="control-label" for="form-field-1">Tipo</label>
+            <div class="controls">
+                     {{ form.tipo }}
+            </div>
+          </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Banco</label>
+            <div class="controls">
+                     {{form.banco }}
+            </div>
+          </div>
+
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Agencia</label>
+            <div class="controls">
+                     {{ form.agencia }}
+            </div>
+          </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Conta</label>
+            <div class="controls">
+                     {{ form.conta }}
+            </div>
+              </div>
+
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Número</label>
+            <div class="controls">
+                     {{ form.numero }}
+            </div>
+          </div>
+
+               <div class="control-group">
+             <label class="control-label" for="form-field-1">Bandeira</label>
+            <div class="controls">
+                     {{form.bandeira }}
+            </div>
+          </div>
+
+               
+
+               <div class="form-actions">
+            <input type="submit" value="Salvar" class="btn btn-info">   
+              </div>
+
+      </form>
+</div>
+{% endblock %}
+
+
+
+
