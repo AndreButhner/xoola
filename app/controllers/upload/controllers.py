@@ -159,15 +159,18 @@ def upload_file():
 def upload_sincronizar():
     wb = load_workbook(filename='/home/andre/Documents/xoola/app/static/docs_repository/extrato/extrato1.xlsx', read_only=True)
     ws = wb['Sheet1']
-    lista = (self)
+    lista = []
 
     for row in ws.get_squared_range(min_col=2,max_col=20, min_row=13, max_row=100):
-        for cell in row:
-            if cell.value != (None):
-                lista.append(cell.value)
-                #print(cell.value)
-    print (lista)
+        lista.append(ExtratoInfo(row))
+        #for cell in row:
+            #if cell.value != (None):
 
+               
+                #print(cell.value)
+    
+    for obj in lista:
+        print ('data: ' + obj.data + ' - desc :' + obj.desc + ' - valor: ' + str(obj.valor) + ' - saldo: ' + str(obj.saldo))
 
 
 
