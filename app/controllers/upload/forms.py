@@ -13,3 +13,9 @@ class UploadDocForm(Form):
 
 class UploadRealizadoForm:
 	descricao = StringField('Descricao', validators=[DataRequired()])
+
+class ExtratoInfo():
+	def __init__(self, data, desc, valor):
+		self.data = data
+		self.desc = desc
+		self.valor = valor

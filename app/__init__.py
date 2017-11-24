@@ -1,7 +1,7 @@
 #coding: utf-8
 
 import os
-from flask import Flask, Blueprint, redirect,url_for
+from flask import Flask, Blueprint, redirect,url_for, render_template
 from flask_mail import Mail, Message
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager

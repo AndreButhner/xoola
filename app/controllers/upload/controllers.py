@@ -3,8 +3,8 @@ from sqlalchemy.sql import func
 from werkzeug import secure_filename
 from app import db
 #from app.controllers.movimentacao.forms import MovForm, MovRealizadoForm, DocsForm, RelForm, PesqForm
-from app.controllers.upload.forms import UploadExtratoForm, UploadDocForm, UploadRealizadoForm
-from app.model import Docs, Upload
+from app.controllers.upload.forms import UploadExtratoForm, UploadDocForm, UploadRealizadoForm, ExtratoInfo
+from app.model import Docs, Upload, Movimentacao
 #from config import UPLOAD_FOLDER
 from configExtrato import UPLOAD_EXTRATO, ALLOWED_EXTENSIONS, app
 from flask_login import login_required, current_user
@@ -15,7 +15,7 @@ from flask import send_from_directory, Flask, request, jsonify
 import os
 import pyexcel as pe
 import csv
-
+from openpyxl import load_workbook
 
 
 upload = Blueprint('upload',__name__)
@@ -154,16 +154,24 @@ def upload_file():
 
 
 
+
 @upload.route('/sincronizar', methods=['GET', 'POST'])
 def upload_sincronizar():
-    with open('/home/andre/workspace/xoola/app/static/docs_repository/extrato/extrato1.csv', newline='') as csvfile:
-       spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
-       linhas=[] 
-       for row in spamreader:
-         linhas.append(row)
-         
-    #return redirect(url_for('upload.index',filename=filename))
-    return render_template('upload/sincronizar.html',title='Anexo de Movimentação',dados=linhas)
+    wb = load_workbook(filename='/home/andre/Documents/xoola/app/static/docs_repository/extrato/extrato1.xlsx', read_only=True)
+    ws = wb['Sheet1']
+    lista = (self)
+
+    for row in ws.get_squared_range(min_col=2,max_col=20, min_row=13, max_row=100):
+        for cell in row:
+            if cell.value != (None):
+                lista.append(cell.value)
+                #print(cell.value)
+    print (lista)
+
+
+
+
+
 
 
 # @upload.route('/realizado/<filename>')
@@ -179,3 +187,21 @@ def upload_sincronizar():
     </form>
     '''
 
+
+
+
+   
+
+
+
+
+#@upload.route('/sincronizar', methods=['GET', 'POST'])
+#def upload_sincronizar():
+ #   with open('/home/andre/workspace/xoola/app/static/docs_repository/extrato/extrato1.csv', newline='') as csvfile:
+  #     spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
+   #    linhas=[] 
+    #   for row in spamreader:
+     #    linhas.append(row)
+         
+    #return redirect(url_for('upload.index',filename=filename))
+    #return render_template('upload/sincronizar.html',title='Anexo de Movimentação',dados=linhas)
