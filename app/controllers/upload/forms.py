@@ -18,10 +18,9 @@ class ExtratoInfo(object):
     def __init__(self, row):
         self.data = ''
         self.desc = ''
-        self.valor = 0
-        self.saldo = 0
+        self.valor = 0.0
+        self.saldo = 0.0
         for i in range(0, 6):
-            #print (row[i].value)
             if row[i].value != (None):
                 if i == 0:
                     self.data = row[i].value
@@ -30,10 +29,10 @@ class ExtratoInfo(object):
                     self.desc = row[i].value
                     print(self.desc)
                 if i == 4:
-                    self.valor = row[i].value
+                    self.valor = float(row[i].value)
                     print (self.valor)
                 if i == 5:
-                    self.saldo = row[i].value
+                    self.saldo = float(row[i].value)
                     print (self.saldo)
 
 

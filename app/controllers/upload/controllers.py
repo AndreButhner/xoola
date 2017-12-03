@@ -4,7 +4,8 @@ from werkzeug import secure_filename
 from app import db
 #from app.controllers.movimentacao.forms import MovForm, MovRealizadoForm, DocsForm, RelForm, PesqForm
 from app.controllers.upload.forms import UploadExtratoForm, UploadDocForm, UploadRealizadoForm, ExtratoInfo
-from app.model import Docs, Upload, Movimentacao
+from app.controllers.categoria.forms import CatForm
+from app.model import Docs, Upload, Movimentacao, Categoria
 #from config import UPLOAD_FOLDER
 from configExtrato import UPLOAD_EXTRATO, ALLOWED_EXTENSIONS, app
 from flask_login import login_required, current_user
@@ -16,6 +17,7 @@ import os
 import pyexcel as pe
 import csv
 from openpyxl import load_workbook
+from datetime import datetime, timedelta
 
 
 upload = Blueprint('upload',__name__)
@@ -163,48 +165,52 @@ def upload_sincronizar():
 
     for row in ws.get_squared_range(min_col=2,max_col=20, min_row=13, max_row=100):
         lista.append(ExtratoInfo(row))
-        #for cell in row:
-            #if cell.value != (None):
-
-               
-                #print(cell.value)
     
-    for obj in lista:
-        print ('data: ' + obj.data + ' - desc :' + obj.desc + ' - valor: ' + str(obj.valor) + ' - saldo: ' + str(obj.saldo))
+    if len(lista):
+        for incoming in lista:
+            if incoming.desc != 'SALDO DO DIA':
+                print ('data: ' + str(incoming.data) + ' - desc :' + incoming.desc + ' - valor: ' + str(incoming.valor) + ' - saldo: ' + str(incoming.saldo))
+            
+                id_cat = -1
+                categories = Categoria.query.filter(Categoria.empresa_id == session['empresa']).all()
+
+                for cat in categories:
+                    if incoming.desc in cat.descricao or incoming.desc == cat.descricao:
+                        id_cat = cat.get_id()
+                    else:
+                        id_cat = -1
+
+                if id_cat == -1:
+                    new_cat = Categoria(
+                        titulo     = 'OUTROS',
+                        descricao  = incoming.desc,
+                        status     = 1 if incoming.valor < 0 else 0
+                    )
+                    new_cat.empresa_id = session['empresa']
+                    new_cat.add(new_cat)
+                    id_cat = new_cat.get_id()
 
 
+                mov = Movimentacao(
+                    titulo            = incoming.desc,
+                    descricao         = '',
+                    valor             = incoming.valor if incoming.valor != (None) else 0,
+                    parcelas          = 1,
+                    data_v            = incoming.data,
+                    categoria_id      = id_cat,
+                    formapagamento_id = 1,                        
+                    conta_id          = 1 if incoming.valor < 0 else 0
+                )       
+                mov.empresa_id = session['empresa']
+                mov.add(mov)
 
+    return redirect(url_for('upload.index'))
 
-
-
-# @upload.route('/realizado/<filename>')
-# def uploaded_file(filename):
-#     return send_from_directory(app.config['UPLOAD_EXTRATO'],
-#                                filename)
     return '''
     <!doctype html>
     <title>Upload new File</title>
     <h1>Upload new File</h1>
     <form action="" method=post enctype=multipart/form-data>
-      <h3>Sincronizado</h3>
+    <h3>Sincronizado</h3>
     </form>
     '''
-
-
-
-
-   
-
-
-
-
-#@upload.route('/sincronizar', methods=['GET', 'POST'])
-#def upload_sincronizar():
- #   with open('/home/andre/workspace/xoola/app/static/docs_repository/extrato/extrato1.csv', newline='') as csvfile:
-  #     spamreader = csv.reader(csvfile, delimiter=';', quotechar='|')
-   #    linhas=[] 
-    #   for row in spamreader:
-     #    linhas.append(row)
-         
-    #return redirect(url_for('upload.index',filename=filename))
-    #return render_template('upload/sincronizar.html',title='Anexo de Movimentação',dados=linhas)

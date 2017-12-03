@@ -12,7 +12,7 @@ categoria = Blueprint('categoria',__name__)
 @login_required
 def index():
     session['tela'] = "categoria"
-    todos =Categoria.query.filter(Categoria.empresa_id == session['empresa'] ).all()
+    todos = Categoria.query.filter(Categoria.empresa_id == session['empresa'] ).all()
     #todos = Categoria.query.all()
     return render_template('categoria/index.html',title='Lista de Categorias',todos=todos)
 
