@@ -87,23 +87,67 @@ def edit(mov_id):
     form.formapagamento_id.choices = [(h.id,h.tipo) for h in Formapagamento.query.all()]
     form.conta_id.choices = [(h.id,h.tipo + '-' + h.conta) for h in Conta.query.all()]
 
+    cat_old_id = mov.categoria_id
+    print('cat_old_id: ' + str(cat_old_id))
+    cat_new_id = form.categoria_id.data
+    print('cat_new_id: ' + str(cat_new_id))
+    
     if form.validate_on_submit():
-         mov.titulo       = form.titulo.data
-         mov.descricao    = form.descricao.data
-         mov.valor        = form.valor.data
-         mov.parcelas     = form.parcelas.data
-         mov.data_v       = form.data_v.data
-         mov.categoria_id = form.categoria_id.data                          
-         mov.formapagamento_id = form.formapagamento_id.data
-         mov.conta_id     = form.conta_id.data
-         mov.update()
+        mov.titulo       = form.titulo.data
+        mov.descricao    = form.descricao.data
+        mov.valor        = form.valor.data
+        mov.parcelas     = form.parcelas.data
+        mov.data_v       = form.data_v.data
+        mov.categoria_id = form.categoria_id.data                          
+        mov.formapagamento_id = form.formapagamento_id.data
+        mov.conta_id     = form.conta_id.data
+        mov.update()
 
-         if session['tela'] == "entrada":
-           mov_id = 0
-         else:
-           mov_id = 1            
+        if session['tela'] == "entrada":
+            mov_id = 0
+        else:
+            mov_id = 1
 
-         return redirect(url_for('movimentacao.index', mov_id=mov_id))
+        # atualiza as categorias
+        cat_old = Categoria.query.get(cat_old_id)
+        cat_old.descricao = ''
+        movs_cat_old = Movimentacao.query.filter(Movimentacao.categoria_id == cat_old_id).all()
+        print('movs_cat_old: ' + str(movs_cat_old))
+        if len(movs_cat_old) > 0:
+            for m in movs_cat_old:
+                if len(movs_cat_old) == 1:
+                    cat_old.descricao = m.titulo
+                    print('1 - cat_old_desc: ' + cat_old.descricao)
+                else:
+                    if movs_cat_old.index(m) < (len(movs_cat_old) - 1):
+                        cat_old.descricao = cat_old.descricao + m.titulo + ' ; '
+                        print('2 - cat_old_desc: ' + cat_old.descricao)
+                    else:
+                        cat_old.descricao = cat_old.descricao + m.titulo
+                        print('3 - cat_old_desc: ' + cat_old.descricao)
+            print('final - cat_old_desc: ' + cat_old.descricao)
+        cat_old.update()
+
+        cat_new = Categoria.query.get(mov.categoria_id)
+        cat_new.descricao = ''
+        movs_cat_new = Movimentacao.query.filter(Movimentacao.categoria_id == mov.categoria_id).all()
+        print('movs_cat_new: ' + str(movs_cat_new))
+        if len(movs_cat_new) > 0:
+            for m in movs_cat_new:
+                if len(movs_cat_new) == 1:
+                    cat_new.descricao = m.titulo
+                    print('1 - cat_new_desc: ' + cat_new.descricao)
+                else:
+                    if movs_cat_new.index(m) < (len(movs_cat_new) - 1):
+                        cat_new.descricao = cat_new.descricao + m.titulo + ' ; '
+                        print('2 - cat_new_desc: ' + cat_new.descricao)
+                    else:
+                        cat_new.descricao = cat_new.descricao + m.titulo
+                        print('3 - cat_new_desc: ' + cat_new.descricao)
+            print('final - cat_new_desc: ' + cat_new.descricao)
+        cat_new.update()
+
+        return redirect(url_for('movimentacao.index', mov_id=mov_id))
     return render_template("movimentacao/edit.html",title='Alterar de Lançamento', form=form)
 
 

@@ -188,7 +188,7 @@ def upload_sincronizar():
 
                 mov = Movimentacao(
                     titulo            = incoming.desc,
-                    descricao         = '',
+                    descricao         = '...',
                     valor             = incoming.valor if incoming.valor != (None) else 0,
                     parcelas          = 1,
                     data_v            = incoming.data,
