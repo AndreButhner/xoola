@@ -2,8 +2,8 @@ from flask import render_template, flash, redirect, request,session, redirect, B
 from werkzeug import secure_filename
 from app import db
 from app.controllers.planejamento.forms import PlanejamentoForm
-from app.model import Planejamento, Categoria
-from flask_login import login_required
+from app.model import Planejamento, Categoria, Usuario, Empresa
+from flask_login import login_required, current_user
 import os
 
 
@@ -16,7 +16,7 @@ planejamento = Blueprint('planejamento',__name__)
 def index():	
     session['tela'] = "planejamento"  
     todos = Planejamento.query.filter(Planejamento.empresa_id == session['empresa']).all()
-    return render_template('planejamento/index.html',title='Meus Planejamentos',planejamento=todos)
+    return render_template('planejamento/index.html',title='Meus Planejamentos',todos=todos)
     
 
 @planejamento.route('/new', methods=['GET','POST'])
@@ -35,3 +35,28 @@ def new():
 	   plan.add(plan)
 	   return redirect(url_for('planejamento.index'))
 	return render_template('planejamento/new.html',title='Meus Planejamentos',form=form)
+
+
+
+@planejamento.route("/edit/<int:plan_id>", methods = ["GET","POST"])
+@login_required
+def edit(plan_id):
+    plan = Planejamento.query.get(plan_id)
+    form = PlanejamentoForm(obj=plan)
+    if form.validate_on_submit():
+       plan.titulo     = form.titulo.data
+       plan.valor 	   = form.valor.data
+       plan.descricao  = form.descricao.data
+       plan.categoria_id = form.categoria_id.data
+       plan.update()
+       return redirect(url_for('planejamento.index'))
+    return render_template('planejamento/edit.html',title='Alterar Planejamento', form=form)
+
+@planejamento.route("/delete/<int:plan_id>")
+@login_required
+def delete(plan_id):
+    plan = Planejamento.query.get(plan_id)
+ 
+    # Verificar se existe movimentação do usuário antes de apagar ou apagar todas as movimentacoes
+    plan.delete(plan)
+    return redirect(url_for('planejamento.index'))

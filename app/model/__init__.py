@@ -420,12 +420,7 @@ class Planejamento(db.Model):
         self.valor  = valor
         self.descricao = descricao
         self.categoria_id = categoria_id
-        
-        
-        
-
-                
-
+          
     def get_id(self):
         return str(self.id)
 

@@ -21,18 +21,29 @@
                           <th> Titulo </th>
                           <th> Valor </th>
                           <th> Descricao </th>
-                          
+                          <th> Id da Categoria </th>
+                          <th> Alterar/Excluir </th>
                        </tr>
                       </thead> 
                       <tbody>
-                        {% for item in planejamento %}
+                        {% for item in todos %}
                           <tr>
                              <td> {{item.id}} </td>
                              <td> {{item.titulo}}</td>
                              <td> {{item.valor}} </td>
                              <td> {{item.descricao}}</td>
+                             <td> {{item.categoria_id}}</td>
                                                           
-                             
+                             <td>
+                                <div class="hidden-phone visible-desktop btn-group">                            
+                                     <a class="btn btn-mini btn-info" href="{{url_for('planejamento.edit', plan_id=item.id)}}"> 
+                                         <i class="icon-edit bigger-120">   </i>                                       
+                                     </a>
+                                     <a class="btn btn-mini btn-danger" href="{{url_for('planejamento.delete', plan_id=item.id)}}">
+                                        <i class="icon-trash bigger-120"></i>
+                                     </a>                           
+                                </div>                         
+                             </td>
 
                         </tr>
                         {% endfor %}

@@ -30,9 +30,9 @@
 		<link rel="stylesheet" href="../static/css/bootstrap-timepicker.css" />
 		<link rel="stylesheet" href="../static/css/daterangepicker.css" />
 		<link rel="stylesheet" href="../static/css/colorpicker.css" />
-		<link rel="stylesheet" href="assets/css/ace.min.css" />
-		<link rel="stylesheet" href="assets/css/ace-responsive.min.css" />
-		<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="../static/css/ace.min.css" />
+		<link rel="stylesheet" href="../static/css/ace-responsive.min.css" />
+		<link rel="stylesheet" href="../static/css/ace-skins.min.css" />
 
 		<!--fonts-->
 
@@ -193,7 +193,7 @@
 
 
 							
-					{% if session['tela'] == "dash" %}
+					<!--{% if session['tela'] == "dash" %}
 					<li class='active'>
                     {% else %}
                      <li>
@@ -203,7 +203,7 @@
 							<i class="icon-dashboard"></i>
 							<span class="menu-text"> Dashboard </span>
 						</a>
-					</li>
+					</li> -->
 
 
 
@@ -310,7 +310,7 @@
 
 
 
-						{% if session['tela'] == 'relatorio' %}
+						<!-- {% if session['tela'] == 'relatorio' %}
 						<li class='active'>
 						{% else %}
 						<li>
@@ -320,7 +320,8 @@
 								<i class="icon-double-angle-right"></i>
 								Fluxo de Caixa
 							</a>
-						</li>
+						</li> -->
+						
 
 
 
@@ -342,7 +343,7 @@
 
 
 
-						{% if session['tela'] == 'pesquisa' %}
+						<!--{% if session['tela'] == 'pesquisa' %}
 						<li class='active'>
 						{% else %}
 						<li>
@@ -352,7 +353,7 @@
 							<i class="icon-double-angle-right"></i>
 							Pesquisas
 						</a>
-						</li>
+						</li> -->
 
 
 
@@ -443,7 +444,7 @@
 
 	
 		<script type="text/javascript">
-			if("ontouchend" in document) document.write("<script src="{{ url_for('static', filename='js/jquery.mobile.custom.min.js') }}">"+"<"+"/script>");
+			if("ontouchend" in document) document.write("<script src={{ url_for('static', filename='js/jquery.mobile.custom.min.js') }}'>"+"<"+"/script>");
 		</script>
 
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
