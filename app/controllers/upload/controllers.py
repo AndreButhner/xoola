@@ -16,6 +16,7 @@ from flask import send_from_directory, Flask, request, jsonify
 import os
 import pyexcel as pe
 import csv
+import re
 from openpyxl import load_workbook
 from datetime import datetime, timedelta
 
@@ -154,12 +155,23 @@ def upload_file():
     '''
 
 
-
+def longestSubstringFinder(string1, string2):
+    answer = ''
+    len1, len2 = len(string1), len(string2)
+    for i in range(len1):
+        match = ''
+        for j in range(len2):
+            if (i + j < len1 and string1[i + j] == string2[j]):
+                match += string2[j]
+            else:
+                if (len(match) > len(answer)): answer = match
+                match = ''
+    return True if len(answer) > 0 else False
 
 
 @upload.route('/sincronizar', methods=['GET', 'POST'])
 def upload_sincronizar():
-    wb = load_workbook(filename='/home/wellmmer/Documents/GitHub Projects/xoola/app/static/docs_repository/extrato/extrato1.xlsx', read_only=True)
+    wb = load_workbook(filename='/Users/wellmmer.oliveira/Documents/GitHub/xoola/app/static/docs_repository/extrato/extrato1.xlsx', read_only=True)
     ws = wb['Sheet1']
     lista = []
 
@@ -169,27 +181,10 @@ def upload_sincronizar():
     if len(lista):
         for incoming in lista:
             if incoming.desc != 'SALDO DO DIA':
-                print ('data: ' + str(incoming.data) + ' - desc :' + incoming.desc + ' - valor: ' + str(incoming.valor) + ' - saldo: ' + str(incoming.saldo))
-            
-                id_cat = -1
-                categories = Categoria.query.filter(Categoria.empresa_id == session['empresa']).all()
-
-                for cat in categories:
-                    if incoming.desc in cat.descricao or incoming.desc == cat.descricao:
-                        id_cat = cat.get_id()
-                    else:
-                        id_cat = -1
-
-                if id_cat == -1:
-                    new_cat = Categoria(
-                        titulo     = 'OUTROS',
-                        descricao  = incoming.desc,
-                        status     = 1 if incoming.valor < 0 else 0
-                    )
-                    new_cat.empresa_id = session['empresa']
-                    new_cat.add(new_cat)
-                    id_cat = new_cat.get_id()
-
+                print('INCOMING - data: ' + str(incoming.data) + ' - desc :' + incoming.desc + ' - valor: ' + str(incoming.valor) + ' - saldo: ' + str(incoming.saldo))
+                
+                # pattern = re.compile("[0-9]*[/][0-9]*\b")
+                # pattern.match(string)
 
                 mov = Movimentacao(
                     titulo            = incoming.desc,
@@ -197,20 +192,93 @@ def upload_sincronizar():
                     valor             = incoming.valor if incoming.valor != (None) else 0,
                     parcelas          = 1,
                     data_v            = incoming.data,
-                    categoria_id      = id_cat,
-                    formapagamento_id = 1,                        
+                    formapagamento_id = 1,
+                    categoria_id      = -1,
                     conta_id          = 1 if incoming.valor < 0 else 0
-                )       
+                )
                 mov.empresa_id = session['empresa']
+
+                categories = Categoria.query.filter(Categoria.empresa_id == session['empresa']).all()
+
+                if len(categories) > 0:
+                    print('categorias: ' + str(categories))
+                    for cat in categories:
+                        if longestSubstringFinder(mov.titulo, cat.descricao) == True:
+                            if (mov.valor < 0 and cat.status == 1) or (mov.valor >= 0 and cat.status == 0):
+                                print('cat: ' + str(cat))
+                                mov.categoria_id = cat.get_id()
+
+                                cat_edited = Categoria.query.get(cat.get_id())
+                                cat_edited.descricao = cat_edited.descricao + ' ; ' + incoming.desc
+                                cat_edited.update()
+
+                    if mov.categoria_id == -1:
+                        if mov.valor < 0:
+                            cat_outros_saida = Categoria.query.filter(Categoria.titulo == 'OUTROS - SAIDA' and Categoria.status == 1).first()
+                            print('saida: ' + str(cat_outros_saida))
+                            if cat_outros_saida != None:
+                                mov.categoria_id = cat_outros_saida.get_id()
+
+                                cat_edited = Categoria.query.get(cat_outros_saida.get_id())
+                                cat_edited.descricao = cat_edited.descricao + ' ; ' + mov.titulo
+                                cat_edited.update()
+                            else:
+                                new_cat = Categoria(
+                                    titulo     = 'OUTROS - SAIDA',
+                                    descricao  = mov.titulo,
+                                    status     = 1
+                                )
+                                new_cat.empresa_id = session['empresa']
+                                new_cat.add(new_cat)
+
+                                mov.categoria_id = new_cat.get_id()
+                                print('new cat saida: ' + str(new_cat))
+                        else:
+                            cat_outros_entrada = Categoria.query.filter(Categoria.titulo == 'OUTROS - ENTRADA' and Categoria.status == 0).first()
+                            print('entrada: ' + str(cat_outros_entrada))
+                            if cat_outros_entrada != None:
+                                mov.categoria_id = cat_outros_entrada.get_id()
+
+                                cat_edited = Categoria.query.get(cat_outros_entrada.get_id())
+                                cat_edited.descricao = cat_edited.descricao + ' ; ' + mov.titulo
+                                cat_edited.update()
+                            else:
+                                new_cat = Categoria(
+                                    titulo     = 'OUTROS - ENTRADA',
+                                    descricao  = mov.titulo,
+                                    status     = 0
+                                )
+                                new_cat.empresa_id = session['empresa']
+                                new_cat.add(new_cat)
+
+                                mov.categoria_id = new_cat.get_id()
+                                print('new cat entrada: ' + str(new_cat))
+                else:
+                    print('categorias vazio: ' + str(categories))
+                    if mov.valor < 0:
+                        new_cat = Categoria(
+                            titulo     = 'OUTROS - SAIDA',
+                            descricao  = mov.titulo,
+                            status     = 1
+                        )
+                        new_cat.empresa_id = session['empresa']
+                        new_cat.add(new_cat)
+
+                        mov.categoria_id = new_cat.get_id()
+                        print('new cat saida: ' + str(new_cat))
+                    else:
+                        new_cat = Categoria(
+                            titulo     = 'OUTROS - ENTRADA',
+                            descricao  = mov.titulo,
+                            status     = 0
+                        )
+                        new_cat.empresa_id = session['empresa']
+                        new_cat.add(new_cat)
+
+                        mov.categoria_id = new_cat.get_id()
+                        print('new cat entrada: ' + str(new_cat))
+
+                print('movimentacao: ' + str(mov))
                 mov.add(mov)
 
     return redirect(url_for('upload.index'))
-
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-    <h3>Sincronizado</h3>
-    </form>
-    '''
