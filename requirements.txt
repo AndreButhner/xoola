@@ -1,33 +1,64 @@
-adium-theme-ubuntu==0.3.4
-chartkick==0.5.0
-click==6.6
-decorator==4.0.10
-et-xmlfile==1.0.1
-ezodf==0.3.2
-Flask==0.11.1
-Flask-Excel==0.0.5
-itsdangerous==0.24
-jdcal==1.3
-Jinja2==2.8
-lxml==3.6.4
-MarkupSafe==0.23
-openpyxl==2.4.1
-pyexcel==0.3.3
-pyexcel-io==0.2.4
-pyexcel-ods3==0.2.2
-pyexcel-webio==0.0.8
-pyexcel-xls==0.2.3
-pyexcel-xlsx==0.2.3
-pyexcel-xlsxw==0.0.1
-PyYAML==3.12
-simplejson==3.10.0
-SQLAlchemy==1.1.3
-sqlalchemy-migrate==0.7.2
-tablib==0.11.4
-Tempita==0.5.2
-texttable==0.8.7
-unity-lens-photos==1.0
-Werkzeug==0.11.11
-xlrd==1.0.0
-XlsxWriter==0.9.3
-xlwt==1.1.2
+pip install chartkick==0.5.0 ; 
+pip install click==6.6 ; 
+pip install decorator==4.0.10 ; 
+pip install et-xmlfile==1.0.1 ; 
+pip install ezodf==0.3.2 ; 
+pip install Flask==0.11.1 ; 
+pip install Flask-Excel==0.0.5 ; 
+pip install itsdangerous==0.24 ; 
+pip install jdcal==1.3 ; 
+pip install Jinja2==2.8 ; 
+pip install lxml==3.6.4 ; 
+pip install MarkupSafe==0.23 ; 
+pip install openpyxl==2.4.1 ; 
+pip install pyexcel==0.3.3 ; 
+pip install pyexcel-io==0.2.4 ; 
+pip install pyexcel-ods3==0.2.2 ; 
+pip install pyexcel-webio==0.0.8 ; 
+pip install pyexcel-xls==0.2.3 ; 
+pip install pyexcel-xlsx==0.2.3 ; 
+pip install pyexcel-xlsxw==0.0.1 ; 
+pip install PyYAML==3.12 ; 
+pip install simplejson==3.10.0 ; 
+pip install SQLAlchemy==1.1.3 ; 
+pip install sqlalchemy-migrate==0.7.2 ; 
+pip install tablib==0.11.4 ; 
+pip install Tempita==0.5.2 ; 
+pip install texttable==0.8.7 ; 
+pip install Werkzeug==0.11.11 ; 
+pip install xlrd==1.0.0 ; 
+pip install XlsxWriter==0.9.3 ; 
+pip install xlwt==1.3.0 ; 
+pip install amqp==1.4.9 ; 
+pip install anyjson==0.3.3 ; 
+pip install Babel==2.3.4 ; 
+pip install billiard==3.3.0.23 ; 
+pip install blinker==1.3 ; 
+pip install celery==3.1.23 ; 
+pip install click==6.6 ; 
+pip install decorator==4.0.10 ; 
+pip install Flask==0.11.1 ; 
+pip install Flask-Babel==0.11.1 ; 
+pip install Flask-Celery==2.4.3 ; 
+pip install Flask-Login==0.3.2 ; 
+pip install Flask-Mail==0.9.1 ; 
+pip install Flask-Script==2.0.5 ; 
+pip install Flask-SQLAlchemy==2.1 ; 
+pip install Flask-WTF==0.12 ; 
+pip install future==0.15.2 ; 
+pip install itsdangerous==0.24 ; 
+pip install Jinja2==2.8 ; 
+pip install kombu==3.0.35 ; 
+pip install MarkupSafe==0.23 ; 
+pip install pbr==1.10.0 ; 
+pip install PyMySQL==0.7.4 ; 
+pip install python-dateutil==2.5.3 ; 
+pip install python-telegram-bot==4.2.1 ; 
+pip install pytz==2016.4 ; 
+pip install six==1.10.0 ; 
+pip install SQLAlchemy==1.0.13 ; 
+pip install sqlalchemy-migrate==0.10.0 ; 
+pip install sqlparse==0.1.19 ; 
+pip install Tempita==0.5.2 ; 
+pip install Werkzeug==0.11.10 ; 
+pip install WTForms==2.1

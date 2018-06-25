@@ -159,7 +159,7 @@ def upload_file():
 
 @upload.route('/sincronizar', methods=['GET', 'POST'])
 def upload_sincronizar():
-    wb = load_workbook(filename='/home/andre/Documents/xoola/app/static/docs_repository/extrato/extrato1.xlsx', read_only=True)
+    wb = load_workbook(filename='/home/wellmmer/Documents/GitHub Projects/xoola/app/static/docs_repository/extrato/extrato1.xlsx', read_only=True)
     ws = wb['Sheet1']
     lista = []
 
