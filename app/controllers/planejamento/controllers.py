@@ -43,6 +43,7 @@ def new():
 def edit(plan_id):
     plan = Planejamento.query.get(plan_id)
     form = PlanejamentoForm(obj=plan)
+    form.categoria_id.choices = [(h.id,h.titulo) for h in Categoria.query.all()]
     if form.validate_on_submit():
        plan.titulo     = form.titulo.data
        plan.valor 	   = form.valor.data
