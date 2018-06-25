@@ -149,6 +149,7 @@ class Categoria(db.Model):
       id            = db.Column(db.Integer, primary_key=True)
       titulo        = db.Column(db.String(100), index=True)
       descricao     = db.Column(db.String(255), index=True)
+      keywords      = db.Column(db.String, index=True)
       status        = db.Column(db.Integer)
       empresa_id    = db.Column(db.Integer, db.ForeignKey('empresa.id'))     
       Movimentacao  = db.relationship('Movimentacao', backref='categoria', lazy='dynamic')
@@ -161,9 +162,10 @@ class Categoria(db.Model):
           return '<Categoria %r>' %(self.titulo)
 
 
-      def __init__(self,titulo, descricao, status):
+      def __init__(self, titulo, descricao, keywords, status):
           self.titulo         = titulo
           self.descricao      = descricao
+          self.keywords       = keywords
           self.status         = status
           self.date_created   = datetime.utcnow()
           self.date_modified  = datetime.utcnow()

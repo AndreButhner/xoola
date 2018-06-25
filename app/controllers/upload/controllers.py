@@ -203,13 +203,13 @@ def upload_sincronizar():
                 if len(categories) > 0:
                     print('categorias: ' + str(categories))
                     for cat in categories:
-                        if longestSubstringFinder(mov.titulo, cat.descricao) == True:
+                        if longestSubstringFinder(mov.titulo, cat.keywords) == True:
                             if (mov.valor < 0 and cat.status == 1) or (mov.valor >= 0 and cat.status == 0):
                                 print('cat: ' + str(cat))
                                 mov.categoria_id = cat.get_id()
 
                                 cat_edited = Categoria.query.get(cat.get_id())
-                                cat_edited.descricao = cat_edited.descricao + ' ; ' + incoming.desc
+                                cat_edited.keywords = cat_edited.keywords + ' ; ' + incoming.desc
                                 cat_edited.update()
 
                     if mov.categoria_id == -1:
@@ -220,12 +220,13 @@ def upload_sincronizar():
                                 mov.categoria_id = cat_outros_saida.get_id()
 
                                 cat_edited = Categoria.query.get(cat_outros_saida.get_id())
-                                cat_edited.descricao = cat_edited.descricao + ' ; ' + mov.titulo
+                                cat_edited.keywords = cat_edited.keywords + ' ; ' + mov.titulo
                                 cat_edited.update()
                             else:
                                 new_cat = Categoria(
                                     titulo     = 'OUTROS - SAIDA',
-                                    descricao  = mov.titulo,
+                                    descricao  = 'Lançamentos de saída não definidos',
+                                    keywords   = mov.titulo,
                                     status     = 1
                                 )
                                 new_cat.empresa_id = session['empresa']
@@ -240,12 +241,13 @@ def upload_sincronizar():
                                 mov.categoria_id = cat_outros_entrada.get_id()
 
                                 cat_edited = Categoria.query.get(cat_outros_entrada.get_id())
-                                cat_edited.descricao = cat_edited.descricao + ' ; ' + mov.titulo
+                                cat_edited.keywords = cat_edited.keywords + ' ; ' + mov.titulo
                                 cat_edited.update()
                             else:
                                 new_cat = Categoria(
                                     titulo     = 'OUTROS - ENTRADA',
-                                    descricao  = mov.titulo,
+                                    descricao  = 'Lançamentos de entrada não definidos',
+                                    keywords   = mov.titulo,
                                     status     = 0
                                 )
                                 new_cat.empresa_id = session['empresa']
@@ -258,7 +260,8 @@ def upload_sincronizar():
                     if mov.valor < 0:
                         new_cat = Categoria(
                             titulo     = 'OUTROS - SAIDA',
-                            descricao  = mov.titulo,
+                            descricao  = 'Lançamentos de saída não definidos',
+                            keywords   = mov.titulo,
                             status     = 1
                         )
                         new_cat.empresa_id = session['empresa']
@@ -269,7 +272,8 @@ def upload_sincronizar():
                     else:
                         new_cat = Categoria(
                             titulo     = 'OUTROS - ENTRADA',
-                            descricao  = mov.titulo,
+                            descricao  = 'Lançamentos de entrada não definidos',
+                            keywords   = mov.titulo,
                             status     = 0
                         )
                         new_cat.empresa_id = session['empresa']

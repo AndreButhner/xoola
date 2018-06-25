@@ -23,10 +23,11 @@ def new():
     form = CatForm()
     if form.validate_on_submit():
        cat = Categoria(
-                           titulo     = form.titulo.data,
-                           descricao  = form.descricao.data,
-                           status     = form.status.data
-                          )
+           titulo     = form.titulo.data,
+           descricao  = form.descricao.data,
+           keywords   = form.titulo.data,
+           status     = form.status.data
+       )
        cat.empresa_id = session['empresa']
        cat.add(cat)
        return redirect(url_for('categoria.index'))

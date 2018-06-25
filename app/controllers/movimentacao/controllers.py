@@ -108,43 +108,43 @@ def edit(mov_id):
         else:
             mov_id = 1
 
-        # atualiza as categorias
+        # atualiza as palavras-chaves das categorias
         cat_old = Categoria.query.get(cat_old_id)
-        cat_old.descricao = ''
+        cat_old.keywords = ''
         movs_cat_old = Movimentacao.query.filter(Movimentacao.categoria_id == cat_old_id).all()
         print('movs_cat_old: ' + str(movs_cat_old))
         if len(movs_cat_old) > 0:
             for m in movs_cat_old:
                 if len(movs_cat_old) == 1:
-                    cat_old.descricao = m.titulo
-                    print('1 - cat_old_desc: ' + cat_old.descricao)
+                    cat_old.keywords = m.titulo
+                    print('1 - cat_old_keywords: ' + cat_old.keywords)
                 else:
                     if movs_cat_old.index(m) < (len(movs_cat_old) - 1):
-                        cat_old.descricao = cat_old.descricao + m.titulo + ' ; '
-                        print('2 - cat_old_desc: ' + cat_old.descricao)
+                        cat_old.keywords = cat_old.keywords + m.titulo + ' ; '
+                        print('2 - cat_old_keywords: ' + cat_old.keywords)
                     else:
-                        cat_old.descricao = cat_old.descricao + m.titulo
-                        print('3 - cat_old_desc: ' + cat_old.descricao)
-            print('final - cat_old_desc: ' + cat_old.descricao)
+                        cat_old.keywords = cat_old.keywords + m.titulo
+                        print('3 - cat_old_keywords: ' + cat_old.keywords)
+            print('final - cat_old_keywords: ' + cat_old.keywords)
         cat_old.update()
 
         cat_new = Categoria.query.get(mov.categoria_id)
-        cat_new.descricao = ''
+        cat_new.keywords = ''
         movs_cat_new = Movimentacao.query.filter(Movimentacao.categoria_id == mov.categoria_id).all()
         print('movs_cat_new: ' + str(movs_cat_new))
         if len(movs_cat_new) > 0:
             for m in movs_cat_new:
                 if len(movs_cat_new) == 1:
-                    cat_new.descricao = m.titulo
-                    print('1 - cat_new_desc: ' + cat_new.descricao)
+                    cat_new.keywords = m.titulo
+                    print('1 - cat_new_keywords: ' + cat_new.keywords)
                 else:
                     if movs_cat_new.index(m) < (len(movs_cat_new) - 1):
-                        cat_new.descricao = cat_new.descricao + m.titulo + ' ; '
-                        print('2 - cat_new_desc: ' + cat_new.descricao)
+                        cat_new.keywords = cat_new.keywords + m.titulo + ' ; '
+                        print('2 - cat_new_keywords: ' + cat_new.keywords)
                     else:
-                        cat_new.descricao = cat_new.descricao + m.titulo
-                        print('3 - cat_new_desc: ' + cat_new.descricao)
-            print('final - cat_new_desc: ' + cat_new.descricao)
+                        cat_new.keywords = cat_new.keywords + m.titulo
+                        print('3 - cat_new_keywords: ' + cat_new.keywords)
+            print('final - cat_new_keywords: ' + cat_new.keywords)
         cat_new.update()
 
         return redirect(url_for('movimentacao.index', mov_id=mov_id))
