@@ -410,6 +410,7 @@ class Planejamento(db.Model):
     descricao         = db.Column(db.String(255))
     categoria_id      = db.Column(db.Integer, db.ForeignKey('categoria.id'))
     empresa_id    = db.Column(db.Integer, db.ForeignKey('empresa.id'))
+    valor_atual = db.Column(db.Float)
          
     
 
@@ -483,3 +484,22 @@ class Upload(db.Model):
     def delete(self,emp):
         db.session.delete(emp)
         return session_commit()
+
+
+class Alert():
+    id = 0
+    titulo = ''
+    valor_limit = 0
+    valor_current = 0
+
+    def __repr__(self):
+        return '<Alert %r>' %(self.titulo)
+
+    def __init__(self):
+        self.id = 0
+        self.titulo = ''
+        self.valor_limit = 0
+        self.valor_current = 0
+
+    def get_id(self):
+        return str(self.id)

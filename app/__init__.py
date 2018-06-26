@@ -80,10 +80,9 @@ app.register_blueprint(dashboard, url_prefix='/dashboard')
 def utility_processor():
     def formatar_dinheiro(value):
         if type(value) == str:
-           value = int(value)
-        #return "R$ {}".format(str(format_currency(value,'BR',format='#.##0,##')))
-        valor = format_decimal(value, format='#.##,##;(#)')
-        return "R$ {}".format(valor)
+            value = int(value)
+            valor = format_decimal(value, format='#.##,##;(#)')
+        return 'R$ {}'.format(valor)
     return dict(formatar_dinheiro=formatar_dinheiro)
 
 

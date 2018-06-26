@@ -1,25 +1,22 @@
-from flask import render_template, flash, redirect, request,session, redirect, Blueprint, url_for
-from sqlalchemy.sql import func
-from werkzeug import secure_filename
+import os
+import re
+import csv
+import pyexcel as pe
+
 from app import db
-#from app.controllers.movimentacao.forms import MovForm, MovRealizadoForm, DocsForm, RelForm, PesqForm
-from app.controllers.upload.forms import UploadExtratoForm, UploadDocForm, UploadRealizadoForm, ExtratoInfo
+from sqlalchemy.sql import func
+from openpyxl import load_workbook
+from werkzeug import secure_filename
+from app.crontab import cad_parcelado
+from datetime import datetime, timedelta, date
 from app.controllers.categoria.forms import CatForm
-from app.model import Docs, Upload, Movimentacao, Categoria
-#from config import UPLOAD_FOLDER
-from configExtrato import UPLOAD_EXTRATO, ALLOWED_EXTENSIONS, app
 from flask_login import login_required, current_user
 from flask_babel import format_currency, format_decimal
-import datetime
-from app.crontab import cad_parcelado
 from flask import send_from_directory, Flask, request, jsonify
-import os
-import pyexcel as pe
-import csv
-import re
-from openpyxl import load_workbook
-from datetime import datetime, timedelta
-
+from configExtrato import UPLOAD_EXTRATO, ALLOWED_EXTENSIONS, app
+from app.model import Docs, Upload, Movimentacao, Categoria, Planejamento, Alert, Empresa, Usuario
+from flask import render_template, flash, redirect, request,session, redirect, Blueprint, url_for
+from app.controllers.upload.forms import UploadExtratoForm, UploadDocForm, UploadRealizadoForm, ExtratoInfo
 
 upload = Blueprint('upload',__name__)
 
@@ -27,56 +24,41 @@ upload = Blueprint('upload',__name__)
 @upload.route('')
 @login_required
 def index():
-    session['tela'] = "upload"
+    session['tela'] = 'upload'
     todos = Upload.query.all()
-    
-    return render_template('upload/index.html',title='Upload de Extrato', todos=todos)
+    set_alerts(session['empresa'])
+    return render_template('upload/index.html', title = 'Upload de Extrato', todos = todos)
 
-
-
-
-@upload.route('/new', methods=['GET','POST'])
+@upload.route('/new', methods = ['GET','POST'])
 @login_required
 def new():
     form = UploadExtratoForm()
     if form.validate_on_submit():
-       upl = Upload(
-                           descricao = form.descricao.data
-                          )
+        upl = Upload(
+            descricao = form.descricao.data
+        )
+        upl.add(upl)
+        return redirect(url_for('upload.index'))
+    return render_template('upload/new.html', title = 'Novos Uploads', form = form)
 
-       upl.add(upl)
-       return redirect(url_for('upload.index'))
-    return render_template('upload/new.html',title='Novos Uploads',form=form)
-
-
-
-@upload.route("/realizado", methods = ["GET","POST"])
+@upload.route('/realizado', methods = ['GET','POST'])
 @login_required
 def realizado():
     upl = Upload.query.filter(Upload.empresa_id == session['empresa']).all()
     form = UploadRealizadoForm(descricao = upl.descricao)
     
-    
+    if form.validate_on_submit():
+        upl.descricao      = form.descricao.data
+        mov.efetuado       = True
 
-    if form.validate_on_submit():        
-        
-         upl.descricao      = form.descricao.data
-         mov.efetuado       = True       
-         
-                  
-         filename_c         = secure_filename(form.extrato.data.filename)
-         if filename_c:
+        filename_c         = secure_filename(form.extrato.data.filename)
+        if filename_c:
             upload_docs(filename_c,upl,form,3)
+            upl.update()
+        return redirect(url_for('upload.index'))
+    return render_template('upload/realizado.html', title = 'Meus Extratos', form = form, upl = upl)
 
-         upl.update()            
-
-         return redirect(url_for('upload.index'))
-    return render_template("upload/realizado.html",title='Meus Extratos', form=form, upl=upl)
-
-
-
-## DOC
-@upload.route('/docs', methods=('GET', 'POST'))
+@upload.route('/docs', methods = ('GET', 'POST'))
 @login_required
 def docs():
     upl = Upload.query.filter(Upload.empresa_id == session['empresa']).all()
@@ -85,47 +67,33 @@ def docs():
     if form.validate_on_submit():
         filename_e = secure_filename(form.extrato.data.filename)
         if filename_e:
-           upload_docs(filename_e,upl,form,3)
+            upload_docs(filename_e,upl,form,3)
                 
-        db.session.commit()       
-            
-
+        db.session.commit()
         return redirect(url_for('upload.index'))
-
-
-    return render_template('upload/docs.html',title='Anexo de Movimentação',form=form,upl=upl)
-
+    return render_template('upload/docs.html', title = 'Anexo de Movimentação', form = form, upl = upl)
 
 @login_required
-def upload_docs(filename,upl,form,tipo):    
+def upload_docs(filename, upl, form, tipo):
     # Tipo
     #  0 - Boleto
     #  1 - Comprovante
     #  2 - Outros
     #  3 - Extrato
-    user = current_user.id           
+    user = current_user.id
     filename = str(upl.id) + '_' + str(user)+'_'+filename
-    #path = UPLOAD_FOLDER+"/"+ mov.empresa.nome.lower()+'/'+Usuario.query.get(user).email.lower() +'/'+filename
-    path = UPLOAD_FOLDER+"/"+filename
+    path = UPLOAD_FOLDER+'/'+filename
     if tipo == 3:
-       file_tipo = "EXTRATO"
-       form.extrato.data.save(path)            
+        file_tipo = 'EXTRATO'
+        form.extrato.data.save(path)            
     
     doc = Docs(filename,path,file_tipo)
     doc.add(doc)
     upl.docs.append(doc)
 
-
-
-
-
-
-
-
-
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 @upload.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -149,11 +117,12 @@ def upload_file():
     <title>Upload new File</title>
     <h1>Upload new File</h1>
     <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
+        <p>
+            <input type=file name=file>
+            <input type=submit value=Upload>
+        </p>
     </form>
     '''
-
 
 def longestSubstringFinder(string1, string2):
     answer = ''
@@ -183,7 +152,7 @@ def upload_sincronizar():
             if incoming.desc != 'SALDO DO DIA':
                 print('INCOMING - data: ' + str(incoming.data) + ' - desc :' + incoming.desc + ' - valor: ' + str(incoming.valor) + ' - saldo: ' + str(incoming.saldo))
                 
-                # pattern = re.compile("[0-9]*[/][0-9]*\b")
+                # pattern = re.compile('[0-9]*[/][0-9]*\b')
                 # pattern.match(string)
 
                 mov = Movimentacao(
@@ -284,5 +253,33 @@ def upload_sincronizar():
 
                 print('movimentacao: ' + str(mov))
                 mov.add(mov)
+    set_alerts(session['empresa'])    
+    return redirect(url_for('movimentacao.index', mov_id = 0))
 
-    return redirect(url_for('upload.index'))
+@upload.context_processor
+def dados():
+    empresa = Empresa.query.get(session['empresa'])
+    usuario = Usuario.query.get(current_user.id)
+    set_alerts(session['empresa'])
+    return dict(empresa = empresa.nome, usuario = usuario.nome)
+
+def formatar_dinheiro(value):
+    if type(value) == str:
+        value = int(value)
+        
+    valor = format_decimal(value, format='#.##.##;(#)')
+    return 'R$ {}'.format(valor)
+
+def set_alerts(empresa_id):
+    session['alerts'] = []
+    plans = Planejamento.query.filter(Planejamento.empresa_id == empresa_id).all()
+    if len(plans) > 0:
+        for plan in plans:
+            movs = Movimentacao.query.filter(Movimentacao.categoria_id == plan.categoria_id).all()
+            
+            sum_valor_movs = 0
+            for mov in movs:
+                sum_valor_movs = sum_valor_movs + abs(mov.valor)
+            
+            if sum_valor_movs >= plan.valor:
+                session['alerts'].append(plan.titulo + ' - Valor Limite: ' + formatar_dinheiro((plan.valor)) + ' - Valor Atual: ' + formatar_dinheiro((sum_valor_movs)))
